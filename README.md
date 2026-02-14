@@ -1,57 +1,75 @@
+<div align="center">
+
 # DrawIO Assistant
 
-An AI-powered chatbot that converts natural language descriptions into interactive draw.io flowcharts. Users describe diagrams in plain language, and the LLM generates and renders professional flowcharts in real time.
+**Turn natural language into professional flowcharts — powered by AI and draw.io**
 
-## Features
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MCP](https://img.shields.io/badge/MCP-Protocol-blueviolet?style=flat-square)](https://modelcontextprotocol.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-- **Natural Language to Diagram** - Describe a flowchart in plain language (e.g., "Draw a user login flow") and get a fully rendered draw.io diagram
-- **Interactive Editing** - Ask the AI to modify colors, shapes, structure, or add new elements to existing diagrams
-- **Live draw.io Editor** - Diagrams render in an embedded interactive draw.io canvas with full editing support
-- **Multi-LLM Support** - Works with both Azure OpenAI (GPT-4o) and Claude models
-- **MCP Protocol Integration** - Uses the Model Context Protocol for standardized diagram operations via `@next-ai-drawio/mcp-server`
-- **Streaming Chat UI** - ChatGPT-style interface with typing animation and auto-scroll
+---
+
+*Describe what you want. Watch the diagram appear. Edit with words, not clicks.*
+
+</div>
+
+## What is DrawIO Assistant?
+
+DrawIO Assistant is a chatbot that bridges the gap between **what you imagine** and **what you draw**. Instead of manually dragging shapes and connecting lines, simply tell the AI what you need:
+
+> "Draw a user login flow with email verification and error handling"
+
+The AI generates a complete, editable draw.io diagram in seconds — and you can keep refining it through conversation.
+
+## Key Features
+
+| | Feature | Description |
+|---|---------|-------------|
+| **Chat** | Natural Language Input | Describe diagrams in plain language and get fully rendered flowcharts |
+| **Edit** | Conversational Editing | Ask the AI to change colors, restructure flows, or add new elements |
+| **Canvas** | Live draw.io Editor | Interactive embedded canvas with full manual editing support |
+| **AI** | Multi-LLM Support | Switch between Azure OpenAI (GPT-4o) and Claude |
+| **Protocol** | MCP Integration | Standardized diagram operations via `@next-ai-drawio/mcp-server` |
+| **UX** | Streaming Chat UI | ChatGPT-style interface with typing animation |
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js 14, React 18, TypeScript |
-| Backend | Next.js API Routes |
-| LLM | OpenAI SDK (Azure OpenAI / Claude) |
-| Diagram | react-drawio (embedded draw.io) |
-| MCP | @modelcontextprotocol/sdk |
-| Security | DOMPurify (XSS protection) |
+```
+Frontend    Next.js 14 / React 18 / TypeScript
+Backend     Next.js API Routes
+LLM         OpenAI SDK (Azure OpenAI + Claude)
+Diagram     react-drawio (embedded draw.io)
+Protocol    @modelcontextprotocol/sdk
+Security    DOMPurify (XSS protection)
+```
 
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 
-- Node.js 20+
-- An Azure OpenAI or Claude API key
-- (Azure) `az login` for Azure credential authentication
+- **Node.js** 20+
+- **API Key** for Azure OpenAI or Claude
+- (Azure only) Run `az login` for credential authentication
 
-### Installation
+### 1. Clone & Install
 
 ```bash
-# Clone the repository
 git clone https://github.com/cgu0/DrawIO-Assistant.git
 cd DrawIO-Assistant
-
-# Install dependencies
 npm install
 ```
 
-### Configuration
-
-Copy the example environment file and fill in your credentials:
+### 2. Configure
 
 ```bash
 cp .env.local.example .env.local
 ```
 
-Edit `.env.local` with your configuration:
-
-**Option 1: Azure OpenAI**
+<details>
+<summary><b>Option A: Azure OpenAI</b></summary>
 
 ```env
 LLM_PROVIDER=azure
@@ -59,8 +77,10 @@ AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
 AZURE_OPENAI_DEPLOYMENT=gpt-4o
 AZURE_OPENAI_API_VERSION=2024-08-01-preview
 ```
+</details>
 
-**Option 2: Claude**
+<details>
+<summary><b>Option B: Claude</b></summary>
 
 ```env
 LLM_PROVIDER=claude
@@ -68,77 +88,82 @@ CLAUDE_API_KEY=sk-your-api-key
 CLAUDE_BASE_URL=https://api.anthropic.com/v1
 CLAUDE_MODEL=claude-sonnet-4-5-20250929
 ```
+</details>
 
-### Run
+### 3. Run
 
 ```bash
-# Development
 npm run dev
-
-# Production
-npm run build
-npm start
 ```
 
-The app runs on [http://localhost:3001](http://localhost:3001).
+Open [http://localhost:3001](http://localhost:3001) and start chatting.
 
 ## How It Works
 
 ```
-User Input (Chat)
-      |
-      v
-  API /chat (POST)
-      |
-      v
-  LLM Call with Tool Definitions (Azure OpenAI / Claude)
-      |
-      v
-  Tool Call: display_diagram or edit_diagram
-      |
-      v
-  MCP Server (@next-ai-drawio/mcp-server)
-      |
-      v
-  XML Validation & Rendering
-      |
-      v
-  draw.io Editor Displays Diagram
+  You: "Draw a microservices architecture"
+   |
+   v
+  +---------------------+
+  | Chat API (/api/chat)|
+  +---------------------+
+   |
+   v
+  +---------------------+
+  | LLM (GPT-4o/Claude) |  <-- Tool definitions: display_diagram / edit_diagram
+  +---------------------+
+   |
+   v
+  +---------------------+
+  | MCP Server          |  <-- @next-ai-drawio/mcp-server
+  +---------------------+
+   |
+   v
+  +---------------------+
+  | draw.io Editor      |  <-- Interactive, editable diagram
+  +---------------------+
 ```
 
-1. The user sends a message describing a diagram
-2. The backend builds a system prompt with the current diagram context (if any) and calls the LLM
-3. The LLM responds with a tool call (`display_diagram` for new diagrams, `edit_diagram` for modifications)
-4. The MCP server processes the tool call and generates valid draw.io XML
-5. The frontend renders the XML in an embedded draw.io editor
+1. You describe a diagram in the chat
+2. The backend sends your message + current diagram context to the LLM
+3. The LLM calls `display_diagram` (new) or `edit_diagram` (modify existing)
+4. The MCP server generates valid draw.io XML
+5. The embedded draw.io editor renders the result
 
 ## Project Structure
 
-```
-demo-chatbot/
-├── app/
-│   ├── api/chat/route.ts      # Chat API endpoint
-│   ├── layout.tsx              # Root layout
-│   └── page.tsx                # Main chat interface
-├── components/
-│   └── DrawIOEditor.tsx        # draw.io editor wrapper
-├── hooks/
-│   ├── useScrollToBottom.ts    # Auto-scroll behavior
-│   └── useStreamingMessage.ts  # Typing animation effect
-├── lib/
-│   ├── config.ts               # Configuration management
-│   ├── llm-client.ts           # LLM abstraction layer
-│   ├── flowchart-tools.ts      # LLM tool definitions
-│   ├── system-prompt.ts        # LLM system instructions
-│   ├── mcp-operations.ts       # MCP operation handlers
-│   ├── mcp-client.ts           # MCP connection manager
-│   ├── xml-utils.ts            # XML utilities
-│   └── sanitize-drawio-edges.ts # Edge sanitization
-├── .env.local.example          # Environment template
-├── package.json
-└── tsconfig.json
+```text
+app/
+  api/chat/route.ts        Chat API endpoint
+  layout.tsx               Root layout
+  page.tsx                 Main chat interface
+
+components/
+  DrawIOEditor.tsx         draw.io editor wrapper
+
+hooks/
+  useScrollToBottom.ts     Auto-scroll behavior
+  useStreamingMessage.ts   Typing animation effect
+
+lib/
+  config.ts                Configuration management
+  llm-client.ts            LLM abstraction layer
+  flowchart-tools.ts       LLM tool definitions
+  system-prompt.ts         LLM system instructions
+  mcp-operations.ts        MCP operation handlers
+  mcp-client.ts            MCP connection manager
+  xml-utils.ts             XML utilities
+  sanitize-drawio-edges.ts Edge sanitization
 ```
 
 ## License
 
 MIT
+
+---
+
+<div align="center">
+
+Built with [Next.js](https://nextjs.org/) and [draw.io](https://www.drawio.com/)
+
+</div>
