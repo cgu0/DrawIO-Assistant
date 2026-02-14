@@ -39,6 +39,7 @@ The AI generates a complete, editable draw.io diagram in seconds — and you can
 
 ```
 Frontend    Next.js 14 / React 18 / TypeScript
+Styling     Tailwind CSS 3
 Backend     Next.js API Routes
 LLM         OpenAI SDK (Azure OpenAI + Claude)
 Diagram     react-drawio (embedded draw.io)
@@ -86,7 +87,7 @@ AZURE_OPENAI_API_VERSION=2024-08-01-preview
 LLM_PROVIDER=claude
 CLAUDE_API_KEY=sk-your-api-key
 CLAUDE_BASE_URL=https://api.anthropic.com/v1
-CLAUDE_MODEL=claude-sonnet-4-5-20250929
+CLAUDE_MODEL=claude-sonnet-4-5-20250514
 ```
 </details>
 
@@ -142,8 +143,7 @@ components/
   DrawIOEditor.tsx         draw.io editor wrapper
 
 hooks/
-  useScrollToBottom.ts     Auto-scroll behavior
-  useStreamingMessage.ts   Typing animation effect
+  useScrollToBottom.ts     Smart auto-scroll behavior
 
 lib/
   config.ts                Configuration management
