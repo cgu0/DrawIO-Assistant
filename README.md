@@ -58,7 +58,6 @@ LLM_PROVIDER=azure
 AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
 AZURE_OPENAI_DEPLOYMENT=gpt-4o
 AZURE_OPENAI_API_VERSION=2024-08-01-preview
-DIAGRAM_MODE=mcp
 ```
 
 **Option 2: Claude**
@@ -68,7 +67,6 @@ LLM_PROVIDER=claude
 CLAUDE_API_KEY=sk-your-api-key
 CLAUDE_BASE_URL=https://api.anthropic.com/v1
 CLAUDE_MODEL=claude-sonnet-4-5-20250929
-DIAGRAM_MODE=mcp
 ```
 
 ### Run
